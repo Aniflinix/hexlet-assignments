@@ -21,6 +21,8 @@ public class FileKV implements KeyValueStorage{
     @Override
     public void set(String key, String value){
         Map<String,String> data = readData();
+        data.put(key,value);
+        writeData(data);
     }
     @Override
     public void unset(String key) {

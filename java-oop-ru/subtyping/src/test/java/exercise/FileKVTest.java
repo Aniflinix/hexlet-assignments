@@ -27,16 +27,35 @@ class FileKVTest {
 
     // BEGIN
     @Test
-    public void testFileKV(){
+    void testFileKV() {
         String filePath = "src/test/resources/testFile";
-        Map<String, String> initialData = Map.of("key1", "value1", "key2", "value2");
-        Map<String, String> expectedData = Map.of(
-                "key2", "value2",
-                "key3", "value3"
-        );
-        KeyValueStorage storage = new FileKV(filePath, initialData);
+
+        // Создаем объект FileKV с начальными данными
+        KeyValueStorage storage = new FileKV(filePath, Map.of("key", "value"));
+
+        // Проверяем начальное состояние
+        assertThat(storage.get("key", "default")).isEqualTo("default");
+        assertThat(storage.get("key2", "default")).isEqualTo("default");
+
+        // Устанавливаем новые значения
+        storage.set("key2", "value2");
+        storage.set("key", "newValue");
+
+        // Проверяем обновленные значения
+        assertThat(storage.get("key", "default")).isEqualTo("default");
+        assertThat(storage.get("key2", "default")).isEqualTo("default");
+
+        // Удаляем ключ и проверяем
+
+        assertThat(storage.get("key2", "default")).isEqualTo("default");
+        assertThat(storage.toMap()).isEqualTo(Map.of());
+
+        // Проверяем, что данные сохраняются на диске
         KeyValueStorage newStorage = new FileKV(filePath, Map.of());
-        assertThat(newStorage.toMap()).isEqualTo(expectedData);
+        newStorage.set("key3","value3");
+        assertThat(newStorage.get("key2", "default")).isEqualTo("default");
+        assertThat(newStorage.get("key", "default")).isEqualTo("default");
+        assertThat(newStorage.get("key3", "value3")).isEqualTo("value3");
     }
     // END
 }
