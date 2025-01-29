@@ -15,7 +15,7 @@ public final class App {
         });
 
         // BEGIN
-        app.get("/users?page=1&per=3",ctx ->ctx.json(USERS));
+        app.get("/users?page=1&per=3",ctx ->ctx.json(USERS).result());
         // END
 
         return app;
