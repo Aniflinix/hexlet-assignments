@@ -15,7 +15,17 @@ public final class App {
         });
 
         // BEGIN
-        app.get("/users?page=1&per=3",ctx ->ctx.json(USERS).result());
+        app.get("/users", ctx -> {
+            int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+            int per = ctx.queryParamAsClass("per", Integer.class).getOrDefault(5);
+
+            int fromIndex = (page - 1) * per;
+            int toIndex = Math.min(fromIndex + per, USERS.size());
+
+            List<Map<String, String>> result = (fromIndex >= USERS.size()) ? List.of() : USERS.subList(fromIndex, toIndex);
+
+            ctx.json(result);
+        });
         // END
 
         return app;
