@@ -19,15 +19,14 @@ public final class App {
         });
 
         // BEGIN
-        app.get("/companies/{id} ", ctx -> {
-            int companyNumber = ctx.pathParamAsClass("id", Integer.class).getOrDefault(0);
+        app.get("/companies/{id}", ctx -> {
+            String id = ctx.pathParam("id"); // Получаем {id} из URL
+            Map<String, String> company = COMPANIES.stream()
+                    .filter(c -> c.get("id").equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundResponse("Company not found")); // 404, если не найдено
 
-            if (companyNumber >= COMPANIES.size() || companyNumber < 0) {
-                throw new NotFoundResponse("Company not found");
-            }
-
-            var company = COMPANIES.get(companyNumber);
-            ctx.json(company);
+            ctx.json(company); // Отправляем JSON-ответ
         });
         // END
 
