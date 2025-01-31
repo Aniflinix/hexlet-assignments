@@ -23,7 +23,7 @@ public final class App {
             int companyNumber = ctx.pathParamAsClass("id", Integer.class).getOrDefault(0);
 
             if (companyNumber >= COMPANIES.size() || companyNumber < 0) {
-                throw new NotFoundResponse("User not found");
+                throw new NotFoundResponse("Company not found");
             }
 
             var company = COMPANIES.get(companyNumber);
